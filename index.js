@@ -318,7 +318,7 @@ Highcharts.chart('container1', {
         text: '',
     },
     subtitle: {
-        text:'Evolutivos',
+        text:'Soporte y Evolutivos',
         style: {
                     fontSize: '20px',
                     //fontWeight: 'bold',
