@@ -1,95 +1,299 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <title>amCharts 5 Example - flow-sankey</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Password Protected Page</title>
     <style>
         html, body {
-            min-height: 100%;
-        }
-
-        body {
             margin: 0;
-            background: #fff;
+            width: 100%;
+            height: 100%;
+            font-family: Arial, Helvetica, sans-serif;
         }
-
-        #csv {
+        #dialogText {
+            color: white;
+            background-color: #333333;
+        }
+        
+        #dialogWrap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: table;
+            background-color: #EEEEEE;
+        }
+        
+        #dialogWrapCell {
+            display: table-cell;
+            text-align: center;
+            vertical-align: middle;
+        }
+        
+        #mainDialog {
+            max-width: 400px;
+            margin: 5px;
+            border: solid #AAAAAA 1px;
+            border-radius: 10px;
+            box-shadow: 3px 3px 5px 3px #AAAAAA;
+            margin-left: auto;
+            margin-right: auto;
+            background-color: #FFFFFF;
+            overflow: hidden;
+            text-align: left;
+        }
+        #mainDialog > * {
+            padding: 10px 30px;
+        }
+        #passArea {
+            padding: 20px 30px;
+            background-color: white;
+        }
+        #passArea > * {
+            margin: 5px auto;
+        }
+        #pass {
+            width: 100%;
+            height: 40px;
+            font-size: 30px;
+        }
+        
+        #messageWrapper {
+            float: left;
+            vertical-align: middle;
+            line-height: 30px;
+        }
+        
+        .notifyText {
             display: none;
         }
-
-        .highcharts-figure,
-        .highcharts-data-table table {
-            min-width: 310px;
-            max-width: 2300px;
-            margin: 1em auto;
+        
+        #invalidPass {
+            color: red;
         }
-
-        .highcharts-data-table table {
-            font-family: Verdana, sans-serif;
-            border-collapse: collapse;
-            border: 1px solid #ebebeb;
-            margin: 10px auto;
-            text-align: center;
-            width: 100%;
-            max-width: 500px;
+        
+        #success {
+            color: green;
         }
-
-        .highcharts-data-table caption {
-            padding: 1em 0;
-            font-size: 1.2em;
-            color: #555;
+        
+        #submitPass {
+            font-size: 20px;
+            border-radius: 5px;
+            background-color: #E7E7E7;
+            border: solid gray 1px;
+            float: right;
+            cursor: pointer;
         }
-
-        .highcharts-data-table th {
-            font-weight: 600;
-            padding: 0.5em;
-        }
-
-        .highcharts-data-table td,
-        .highcharts-data-table th,
-        .highcharts-data-table caption {
-            padding: 0.5em;
-        }
-
-        .highcharts-data-table thead tr,
-        .highcharts-data-table tr:nth-child(even) {
-            background: #f8f8f8;
-        }
-
-        .highcharts-data-table tr:hover {
-            background: #f1f7ff;
-        }
-
-
-        .page-tittle {
-            display:block;
-            position: relative;
-            text-align: center;
-            padding: 25px;
-            width: 100%;
-            font-family: Open Sans,sans-serif;
-            font-size: 32px;
-            font-weight: 700;
-            color:#215299;
+        #contentFrame {
+            position: absolute;
+            top: 0;
             left: 0;
+            width: 100%;
+            height: 100%;
         }
-      </style>
+        #attribution {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            text-align: center;
+            padding: 10px;
+            font-weight: bold;
+            font-size: 0.8em;
+        }
+        #attribution, #attribution a {
+            color: #999;
+        }
+        .error {
+            display: none;
+            color: red;
+        }
+    </style>
   </head>
-  <body> 
-<script src="https://code.highcharts.com/highcharts.js"></script>
-<script src="https://code.highcharts.com/modules/sankey.js"></script>
-<script src="https://code.highcharts.com/modules/exporting.js"></script>
-<script src="https://code.highcharts.com/modules/export-data.js"></script>
-<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+  <body>
+    <iframe id="contentFrame" frameBorder="0" allowfullscreen></iframe>
+    <div id="dialogWrap">
+        <div id="dialogWrapCell">
+            <div id="mainDialog">
+                <div id="dialogText">This page is password protected.</div>
+                <div id="passArea">
+                    <p id="passwordPrompt">Password</p>
+                    <input id="pass" type="password" name="pass" autofocus>
+                    <div>
+                        <span id="messageWrapper">
+                            <span id="invalidPass" class="error">Sorry, please try again.</span>
+                            <span id="trycatcherror" class="error">Sorry, something went wrong.</span>
+                            <span id="success" class="notifyText">Success!</span>
+                            &nbsp;
+                        </span>
+                        <button id="submitPass" type="button">Submit</button>
+                        <div style="clear: both;"></div>
+                    </div>
+                </div>
+                <div id="securecontext" class="error">
+                    <p>
+                        Sorry, but password protection only works over a secure connection. Please load this page via HTTPS.
+                    </p>
+                </div>
+                <div id="nocrypto" class="error">
+                    <p>
+                        Your web browser appears to be outdated. Please visit this page using a modern browser.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="attribution">
+        Protected by <a href="https://www.maxlaumeister.com/pagecrypt/">PageCrypt</a>
+    </div>
+    <script>
+    (function() {
 
-<figure class="highcharts-figure">
-    <div id="container"></div>
-</figure>
+        var pl = "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";
+        
+        var submitPass = document.getElementById('submitPass');
+        var passEl = document.getElementById('pass');
+        var invalidPassEl = document.getElementById('invalidPass');
+        var trycatcherror = document.getElementById('trycatcherror');
+        var successEl = document.getElementById('success');
+        var contentFrame = document.getElementById('contentFrame');
+        
+        // Sanity checks
 
-<figure class="highcharts-figure">
-    <div id="container1"></div>
-</figure>
+        if (pl === "") {
+            submitPass.disabled = true;
+            passEl.disabled = true;
+            alert("This page is meant to be used with the encryption tool. It doesn't work standalone.");
+            return;
+        }
 
-    <script src="index.js"></script>
+        if (!isSecureContext) {
+            document.querySelector("#passArea").style.display = "none";
+            document.querySelector("#securecontext").style.display = "block";
+            return;
+        }
+
+        if (!crypto.subtle) {
+            document.querySelector("#passArea").style.display = "none";
+            document.querySelector("#nocrypto").style.display = "block";
+            return;
+        }
+        
+        function str2ab(str) {
+            var ustr = atob(str);
+            var buf = new ArrayBuffer(ustr.length);
+            var bufView = new Uint8Array(buf);
+            for (var i=0, strLen=ustr.length; i < strLen; i++) {
+                bufView[i] = ustr.charCodeAt(i);
+            }
+            return bufView;
+        }
+
+        async function deriveKey(salt, password) {
+            const encoder = new TextEncoder()
+            const baseKey = await crypto.subtle.importKey(
+                'raw',
+                encoder.encode(password),
+                'PBKDF2',
+                false,
+                ['deriveKey'],
+            )
+            return await crypto.subtle.deriveKey(
+                { name: 'PBKDF2', salt, iterations: 100000, hash: 'SHA-256' },
+                baseKey,
+                { name: 'AES-GCM', length: 256 },
+                true,
+                ['decrypt'],
+            )
+        }
+        
+        async function doSubmit(evt) {
+            submitPass.disabled = true;
+            passEl.disabled = true;
+
+            let iv, ciphertext, key;
+            
+            try {
+                var unencodedPl = str2ab(pl);
+
+                const salt = unencodedPl.slice(0, 32)
+                iv = unencodedPl.slice(32, 32 + 16)
+                ciphertext = unencodedPl.slice(32 + 16)
+
+                key = await deriveKey(salt, passEl.value);
+            } catch (e) {
+                trycatcherror.style.display = "inline";
+                console.error(e);
+                return;
+            }
+
+            try {
+                const decryptedArray = new Uint8Array(
+                    await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, key, ciphertext)
+                );
+
+                let decrypted = new TextDecoder().decode(decryptedArray);
+
+                if (decrypted === "") throw "No data returned";
+
+                const basestr = '<base href="." target="_top">';
+                const anchorfixstr = `
+                    <script>
+                        Array.from(document.links).forEach((anchor) => {
+                            const href = anchor.getAttribute("href");
+                            if (href.startsWith("#")) {
+                                anchor.addEventListener("click", function(e) {
+                                    e.preventDefault();
+                                    const targetId = this.getAttribute("href").substring(1);
+                                    const targetEl = document.getElementById(targetId);
+                                    targetEl.scrollIntoView();
+                                });
+                            }
+                        });
+                    <\/script>
+                `;
+                
+                // Set default iframe link targets to _top so all links break out of the iframe
+                if (decrypted.includes("<head>")) decrypted = decrypted.replace("<head>", "<head>" + basestr);
+                else if (decrypted.includes("<!DOCTYPE html>")) decrypted = decrypted.replace("<!DOCTYPE html>", "<!DOCTYPE html>" + basestr);
+                else decrypted = basestr + decrypted;
+
+                // Fix fragment links
+                if (decrypted.includes("</body>")) decrypted = decrypted.replace("</body>", anchorfixstr + '</body>');
+                else if (decrypted.includes("</html>")) decrypted = decrypted.replace("</html>", anchorfixstr + '</html>');
+                else decrypted = decrypted + anchorfixstr;
+                
+                contentFrame.srcdoc = decrypted;
+                
+                successEl.style.display = "inline";
+                setTimeout(function() {
+                    dialogWrap.style.display = "none";
+                }, 1000);
+            } catch (e) {
+                invalidPassEl.style.display = "inline";
+                passEl.value = "";
+                submitPass.disabled = false;
+                passEl.disabled = false;
+                console.error(e);
+                return;
+            }
+        }
+        
+        submitPass.onclick = doSubmit;
+        passEl.onkeypress = function(e){
+            if (!e) e = window.event;
+            var keyCode = e.keyCode || e.which;
+            invalidPassEl.style.display = "none";
+            if (keyCode == '13'){
+              // Enter pressed
+              doSubmit();
+              return false;
+            }
+        }
+    })();
+    </script>
   </body>
 </html>
